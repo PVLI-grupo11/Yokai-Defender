@@ -4,7 +4,9 @@ import Result from "./scenes/result.js";
 
 // estilos para el juego (textos y movidas)
 export const styles = {
-  title: { fontSize: "48px" }
+  title: { fontSize: "48px" },
+  button: { fontSize: "24px" },
+  slot: { fontSize: "16px", align: "center" }
 };
 
 new Phaser.Game({
