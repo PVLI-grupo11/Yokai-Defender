@@ -120,8 +120,6 @@ Para ello el Dios Yokai te enseñará a vincularte con la energía yokai, y te e
 
   **Espíritu de Planta:** Un enemigo de tipo Planta. Se mueve más despacio de lo normal, se puede regenerar un poco de vida cada x tiempo.
 
-  **El Payasito Chito Chito:** Espíritu de tipo Neutral. Tiene más vida que los espíritus neutrales y se mueve más lento. Cada x segundos realiza una acción que cambia el tipo de elemento (de manera aleatoria).
-
 ## Interfaz
 
 La interfaz es la básica de un juego de tower defense, tendrás un indicador de cantidad de "alegría" actual almacenada y un indicador de la oleada actual en la que te encuentras. Asimismo tendrás una barra de acceso a las "torres" de las que dispongas en el momento para poner sobre la fila que consideres. Por último un botón de pausa con el que poder acceder a un menú que te lleva a la pantalla de inicio (botón reiniciar partida).
