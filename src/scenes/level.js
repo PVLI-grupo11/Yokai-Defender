@@ -1,15 +1,10 @@
 import HUD from "../ui/HUD.js";
-import Yokai from "../objects/Yokai.js";
-import Joy from "../objects/Joy.js";
+import { JOY_DELAY, JOY_VALUE, JoyYokai, FireYokai, PlantYokai, WaterYokai } from "../objects/yokai.js";
 
 // carriles (5x9) TODO: meter a una clase tablero?
 const ROWS = 5, COLS = 9;
 const WIDTH = 70, HEIGHT = 100;
 const GRID_X = 160, GRID_Y = 80;
-
-// alegría que cae del cielo
-const JOY_DELAY = 3000;   // ms entre cada alegría
-const JOY_VALUE = 25;     // alegría que da cada una
 
 export default class Level extends Phaser.Scene {
   constructor() { super("level"); }
@@ -31,13 +26,13 @@ export default class Level extends Phaser.Scene {
       }
     }
 
-    this.hud = new HUD(this);
+    this.hud = new HUD(this, [JoyYokai, FireYokai, PlantYokai, WaterYokai]);  // yokais disponibles en este nivel
   
-    // cada JOY_DELAY ms cae una alegría
+    // cada JOY_DELAY ms se genera alegría
     this.time.addEvent({
     delay: JOY_DELAY,
     loop: true,
-    callback: () => this.spawnJoy()
+    callback: () => this.hud.addJoy(JOY_VALUE)
   });
     
   }
@@ -50,15 +45,6 @@ export default class Level extends Phaser.Scene {
     };
   }
 
-  // crea una alegría que cae sobre una casilla aleatoria
-  spawnJoy() {
-    const row = Phaser.Math.Between(0, ROWS - 1);
-    const col = Phaser.Math.Between(0, COLS - 1);
-    const { x, y } = this.cellCenter(row, col);
-
-    new Joy(this, x, y, JOY_VALUE, this.hud);
-  }
-
    // decide qué hacer al pulsar una casilla según el modo del HUD
   onCellClick(row, col) {
     if (this.hud.erasing) this.removeYokai(row, col);
@@ -67,14 +53,17 @@ export default class Level extends Phaser.Scene {
 
   // coloca el yokai seleccionado en la casilla (fila, columna)
   placeYokai(row, col) {
-    const config = this.hud.selected;
-    if (!config) return;                 // no hay yokai seleccionado
+    const icon = this.hud.selected;      // yokai de muestra del selector
+    if (!icon) return;                   // no hay yokai seleccionado
     if (this.grid[row][col]) return;     // casilla ocupada
-    if (!this.hud.spendJoy(config.cost)) return;  //no hay alegría suficiente (si la hay, la gasta)
+    if (!this.hud.spendJoy(icon.cost)) return;  //no hay alegría suficiente (si la hay, la gasta)
 
     const { x, y } = this.cellCenter(row, col);
 
-    this.grid[row][col] = new Yokai(this, x, y, config);
+    // crea uno nuevo del mismo tipo que el de muestra y empieza a actuar
+    this.grid[row][col] = new icon.constructor(this, x, y);
+    this.grid[row][col].start();
+    this.hud.cashbacks.add(this.grid[row][col].cashbackText);  // se muestra en modo borrado
     this.hud.clearSelection();
   }
 
