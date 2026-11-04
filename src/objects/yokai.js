@@ -1,5 +1,6 @@
 // clase prov de los yokais (habrá que cambiarlo)
 import { styles } from "../game.js";
+import Bullet from "./bullet.js";
 
 // alegría que se genera sola (la del nivel y la de cada yokai de alegría)
 export const JOY_DELAY = 3000;   // ms entre cada generación
@@ -42,26 +43,28 @@ export default class Yokai extends Phaser.GameObjects.Container {
 
 // genera alegría
 export class JoyYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, "yokai-joy", 50, 100, JOY_DELAY); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-joy", 1, 100, JOY_DELAY); }
 
   act() { this.scene.hud.addJoy(JOY_VALUE); }
 }
 
 // dispara fuego
 export class FireYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, "yokai-fire", 100, 100, 1500); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-fire", 1, 100, 1500); }
 
-  act() { /* TODO: disparar */ }
+  act() { new Bullet(this.scene, this.x, this.y, 0xe4572e, 25, true); }  // atraviesa a los enemigos
 }
 
-// aguanta golpes (no hace nada)
+// dispara planta (TODO: cada tres disparos, uno que enraíza)
 export class PlantYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, "yokai-plant", 75, 150); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-plant", 1, 150, 1500); }
+
+  act() { new Bullet(this.scene, this.x, this.y, 0x4caf50, 25); }
 }
 
 // dispara agua
 export class WaterYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, "yokai-water", 100, 100, 1500); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-water", 1, 100, 1500); }
 
-  act() { /* TODO: disparar */ }
+  act() { new Bullet(this.scene, this.x, this.y, 0x3f88c5, 25); }
 }
