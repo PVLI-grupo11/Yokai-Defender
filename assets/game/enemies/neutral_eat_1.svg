@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="92" height="94" viewBox="-14 -6 92 94">
+  <!-- espectro encapuchado, mira a la izquierda -->
+  <ellipse cx="32" cy="84" rx="22" ry="3" fill="#000" opacity=".35"/>
+  <g transform="translate(29 84) skewX(9) scale(1 .95) translate(-32 -84)">
+  <path d="M34 5C18 5 10 19 10 35c0 16-2 32-6 46 5 3 9-4 13-1 4 3 7 4 11 1 4-3 8 3 12 0 5-3 10 3 17 1-4-14-5-30-5-46C52 19 49 5 34 5Z" fill="#3b3a4a" stroke="#100f18" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M34 15c-11 0-17 9-17 19s6 16 16 16 15-7 15-17-4-18-14-18Z" fill="#12111c"/>
+  <path d="M19 30l10 3-2 5c-4 0-7-3-8-8ZM35 33l11-3c-1 5-4 8-9 8Z" fill="#ff3b3b"/>
+  <path d="M26 44l3-3 3 3 3-3 3 3" fill="none" stroke="#6b6a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="88" viewBox="0 0 64 88">
+<svg xmlns="http://www.w3.org/2000/svg" width="92" height="94" viewBox="-14 -6 92 94">
   <!-- mole oscura de agua profunda: grande porque tiene más vida -->
   <ellipse cx="32" cy="84" rx="28" ry="3" fill="#000" opacity=".35"/>
+  <g transform="translate(32 84) skewX(-3) translate(-32 -84)">
   <path d="M32 11C14 11 4 28 4 48c0 12 0 24-2 33 5 3 8-2 12 0 4 3 8 3 12 0 3-2 7 3 11 1 5-3 8-3 13 0 3 1 8 1 12-1-2-9-2-21-2-33C60 28 50 11 32 11Z" fill="#14305c" stroke="#050d1e" stroke-width="3" stroke-linejoin="round"/>
   <path d="M15 34c5-9 13-13 22-12" fill="none" stroke="#3f6ea8" stroke-width="3" stroke-linecap="round"/>
   <path d="M46 61q5 5 8 0M10 66q4 4 7 0" fill="none" stroke="#3f6ea8" stroke-width="2.500" stroke-linecap="round"/>
@@ -9,4 +10,5 @@
   <circle cx="18" cy="40" r="3.500" fill="#7ff0ff"/>
   <circle cx="38" cy="40" r="3.500" fill="#7ff0ff"/>
   <path d="M12 56c4 4 8-1 12 3 4 3 7-2 11 1s6 0 9-3" fill="none" stroke="#050d1e" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>
