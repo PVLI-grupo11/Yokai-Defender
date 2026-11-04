@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- espíritu blanco con pañuelo -->
+  <ellipse cx="32" cy="60" rx="20" ry="3" fill="#000" opacity=".25"/>
+  <path d="M32 5C16 5 9 18 9 33c0 13 2 24 8 24 4 0 5-5 9-5 3 0 3 6 7 6s4-6 8-6 5 5 9 5c5 0 6-11 6-24C56 18 48 5 32 5Z" fill="#f6f1e3" stroke="#2f2a48" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M12 38c12 6 28 6 41 0l1 7c-13 6-30 6-43 0Z" fill="#8a63c9" stroke="#2f2a48" stroke-width="2.5" stroke-linejoin="round"/>
+  <ellipse cx="31" cy="24" rx="5" ry="6.5" fill="#2f2a48"/>
+  <ellipse cx="46" cy="24" rx="5" ry="6.5" fill="#2f2a48"/>
+  <circle cx="33" cy="21" r="2" fill="#fff"/>
+  <circle cx="48" cy="21" r="2" fill="#fff"/>
+  <path d="M34 32q5 4 9 0" fill="none" stroke="#2f2a48" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

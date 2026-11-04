@@ -9,7 +9,17 @@ const GRID_X = 160, GRID_Y = 80;
 export default class Level extends Phaser.Scene {
   constructor() { super("level"); }
 
+  preload() {
+    this.load.svg("background", "assets/game/background.svg");
+    this.load.svg("yokai-joy", "assets/game/yokais/joy.svg");
+    this.load.svg("yokai-fire", "assets/game/yokais/fire.svg");
+    this.load.svg("yokai-plant", "assets/game/yokais/plant.svg");
+    this.load.svg("yokai-water", "assets/game/yokais/water.svg");
+  }
+
   create() {
+    this.add.image(0, 0, "background").setOrigin(0);
+
     // matriz con lo que hay en cada casilla (null = vacía)
     this.grid = [];
 

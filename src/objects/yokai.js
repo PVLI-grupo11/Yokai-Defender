@@ -8,7 +8,7 @@ export const JOY_VALUE = 25;     // alegría que se suma cada vez
 // clase base de la que hereda cada tipo de yokai
 export default class Yokai extends Phaser.GameObjects.Container {
   
-  constructor(scene, x, y, color, cost, health, delay) {
+  constructor(scene, x, y, texture, cost, health, delay) {
     super(scene, x, y);
 
     this.cost = cost;
@@ -22,7 +22,7 @@ export default class Yokai extends Phaser.GameObjects.Container {
 
     // placeholder del yokai + su texto (se destruyen junto al contenedor)
     this.add([
-      new Phaser.GameObjects.Rectangle(scene, 0, 0, 45, 45, color).setStrokeStyle(1, 0xffffff),
+      new Phaser.GameObjects.Image(scene, 0, 0, texture),
       this.cashbackText
     ]);
     scene.add.existing(this);
@@ -42,26 +42,26 @@ export default class Yokai extends Phaser.GameObjects.Container {
 
 // genera alegría
 export class JoyYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, 0xffd23f, 50, 100, JOY_DELAY); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-joy", 50, 100, JOY_DELAY); }
 
   act() { this.scene.hud.addJoy(JOY_VALUE); }
 }
 
 // dispara fuego
 export class FireYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, 0xe4572e, 100, 100, 1500); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-fire", 100, 100, 1500); }
 
   act() { /* TODO: disparar */ }
 }
 
 // aguanta golpes (no hace nada)
 export class PlantYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, 0x4caf50, 75, 150); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-plant", 75, 150); }
 }
 
 // dispara agua
 export class WaterYokai extends Yokai {
-  constructor(scene, x, y) { super(scene, x, y, 0x3f88c5, 100, 100, 1500); }
+  constructor(scene, x, y) { super(scene, x, y, "yokai-water", 100, 100, 1500); }
 
   act() { /* TODO: disparar */ }
 }
