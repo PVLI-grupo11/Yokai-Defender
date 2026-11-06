@@ -9,7 +9,7 @@ import PlantEnemy from "../objects/enemyType/plantEnemy.js";
 
 // carriles (5x9) TODO: meter a una clase tablero?
 const ROWS = 5, COLS = 9;
-const WIDTH = 70, HEIGHT = 100;
+const WIDTH = 70, HEIGHT = 104;
 const GRID_X = 160, GRID_Y = 80;
 
 const ENEMY_DELAY = 10000;   // ms entre cada enemigo, 10 segundos
@@ -27,123 +27,16 @@ export default class Level extends Phaser.Scene {
 
 
     // Enemigos
-    this.load.svg("enemy-neutral-0", "assets/game/enemies/neutral_0.svg");
-    this.load.svg("enemy-neutral-1", "assets/game/enemies/neutral_1.svg");
-    this.load.svg("enemy-neutral-2", "assets/game/enemies/neutral_2.svg");
-
-    this.load.svg("enemy-fire-0", "assets/game/enemies/fire_0.svg");
-    this.load.svg("enemy-fire-1", "assets/game/enemies/fire_1.svg");
-    this.load.svg("enemy-fire-2", "assets/game/enemies/fire_2.svg");
-
-    this.load.svg("enemy-water-0", "assets/game/enemies/water_0.svg");
-    this.load.svg("enemy-water-1", "assets/game/enemies/water_1.svg");
-    this.load.svg("enemy-water-2", "assets/game/enemies/water_2.svg");
-
-    this.load.svg("enemy-plant-0", "assets/game/enemies/plant_0.svg");
-    this.load.svg("enemy-plant-1", "assets/game/enemies/plant_1.svg");
-    this.load.svg("enemy-plant-2", "assets/game/enemies/plant_2.svg");
-
-    this.load.svg("enemy-neutral-eat-0", "assets/game/enemies/neutral_eat_0.svg");
-    this.load.svg("enemy-neutral-eat-1", "assets/game/enemies/neutral_eat_1.svg");
-
-    this.load.svg("enemy-fire-eat-0", "assets/game/enemies/fire_eat_0.svg");
-    this.load.svg("enemy-fire-eat-1", "assets/game/enemies/fire_eat_1.svg");
-
-    this.load.svg("enemy-water-eat-0", "assets/game/enemies/water_eat_0.svg");
-    this.load.svg("enemy-water-eat-1", "assets/game/enemies/water_eat_1.svg");
-
-    this.load.svg("enemy-plant-eat-0", "assets/game/enemies/plant_eat_0.svg");
-    this.load.svg("enemy-plant-eat-1", "assets/game/enemies/plant_eat_1.svg");
+    this.load.svg("enemy-neutral", "assets/game/enemies/neutral_0.svg");
+    this.load.svg("enemy-fire", "assets/game/enemies/fire_0.svg");
+    this.load.svg("enemy-water", "assets/game/enemies/water_0.svg");
+    this.load.svg("enemy-plant", "assets/game/enemies/plant_0.svg");
   }
 
   create() {
     this.add.image(0, 0, "background").setOrigin(0);
 
     this.enemies = this.add.group();
-
-    this.anims.create({
-      key: "enemy-neutral-walk",
-      frames: [
-        { key: "enemy-neutral-0" },
-        { key: "enemy-neutral-1" },
-        { key: "enemy-neutral-2" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-fire-walk",
-      frames: [
-        { key: "enemy-fire-0" },
-        { key: "enemy-fire-1" },
-        { key: "enemy-fire-2" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-water-walk",
-      frames: [
-        { key: "enemy-water-0" },
-        { key: "enemy-water-1" },
-        { key: "enemy-water-2" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-plant-walk",
-      frames: [
-        { key: "enemy-plant-0" },
-        { key: "enemy-plant-1" },
-        { key: "enemy-plant-2" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-neutral-eat",
-      frames: [
-        { key: "enemy-neutral-eat-0" },
-        { key: "enemy-neutral-eat-1" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-fire-eat",
-      frames: [
-        { key: "enemy-fire-eat-0" },
-        { key: "enemy-fire-eat-1" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-water-eat",
-      frames: [
-        { key: "enemy-water-eat-0" },
-        { key: "enemy-water-eat-1" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
-
-    this.anims.create({
-      key: "enemy-plant-eat",
-      frames: [
-        { key: "enemy-plant-eat-0" },
-        { key: "enemy-plant-eat-1" }
-      ],
-      repeat: -1,
-      frameRate: 6
-    });
 
     // matriz con lo que hay en cada casilla (null = vacía)
     this.grid = [];
@@ -154,7 +47,7 @@ export default class Level extends Phaser.Scene {
       for (let j = 0; j < COLS; j++) {
         this.grid[i][j] = null;
 
-        this.add.rectangle(GRID_X + j * WIDTH, GRID_Y + i * HEIGHT, WIDTH - 4, HEIGHT - 4).setOrigin(0)
+        this.add.rectangle(GRID_X + j * WIDTH, GRID_Y + i * HEIGHT, WIDTH - 4, HEIGHT).setOrigin(0)
           .setStrokeStyle(1, 0xffffff)
           .setInteractive()
           .on("pointerdown", () => this.onCellClick(i, j));
@@ -183,7 +76,7 @@ export default class Level extends Phaser.Scene {
   cellCenter(row, col) {
     return {
       x: GRID_X + col * WIDTH + (WIDTH - 4) / 2,
-      y: GRID_Y + row * HEIGHT + (HEIGHT - 4) / 2
+      y: GRID_Y + row * HEIGHT + HEIGHT / 2
     };
   }
 

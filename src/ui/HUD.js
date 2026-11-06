@@ -34,7 +34,7 @@ export default class HUD {
       .on("pointerdown", () => scene.scene.start("result"));
 
     // templo
-    scene.add.rectangle(10, 80, 140, 496).setOrigin(0).setStrokeStyle(1, 0xffffff);
+    scene.add.rectangle(10, 80, 140, 520).setOrigin(0).setStrokeStyle(1, 0xffffff);
 
     // selector de yokais
     for (let i = 0; i < yokais.length; i++) {

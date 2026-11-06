@@ -5,28 +5,20 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   
   constructor(scene, row, type, health, speed) {
     const { y } = scene.cellCenter(row, 0);     // la y de su fila
-    super(scene, scene.scale.width + 40, y, "enemy-" + type + "-0");    //nace fuera a la derecha, en la fila que le toca
+    super(scene, scene.scale.width + 40, y, "enemy-" + type);    //nace fuera a la derecha, en la fila que le toca
 
     this.row = row;
     this.health = health;
     this.speed = speed;
-    this.enemyType = type;
 
     scene.add.existing(this);
     scene.enemies.add(this);
-    this.play("enemy-" + type + "-walk");       // empieza su animación
   }
 
   preUpdate(time, delta) {
     super.preUpdate(time, delta);               
     // si no está comiéndose a nadie, sigue andando
-    if (this.eatYokai(delta)) {
-      this.play("enemy-" + this.enemyType + "-eat", true);    // comiendo: no anda
-    } 
-    else {
-      this.play("enemy-" + this.enemyType + "-walk", true);   // sin comer: anda
-      this.x -= this.speed * delta / 1000;
-    }
+    if (!this.eatYokai(delta)) this.x -= this.speed * delta / 1000;
   }
 
   // muerde al yokai que esté tocando, devuelve true esta comiendo
