@@ -1,132 +1,140 @@
 import HUD from "../ui/HUD.js";
-import { JOY_DELAY, JOY_VALUE, JoyYokai, FireYokai, PlantYokai, WaterYokai } from "../objects/yokai.js";
-
-import Enemy from "../objects/enemy.js";
-import NeutralEnemy from "../objects/enemyType/neutralEnemy.js";
-import FireEnemy from "../objects/enemyType/fireEnemy.js";
-import WaterEnemy from "../objects/enemyType/waterEnemy.js";
-import PlantEnemy from "../objects/enemyType/plantEnemy.js";
+import { configs } from "../game.js";
+import { FireEnemy, WaterEnemy, PlantEnemy } from "../objects/enemies.js";
 
 // carriles (5x9) TODO: meter a una clase tablero?
 const ROWS = 5, COLS = 9;
 const WIDTH = 70, HEIGHT = 104;
 const GRID_X = 160, GRID_Y = 80;
 
-const ENEMY_DELAY = 10000;   // ms entre cada enemigo, 10 segundos
-const ENEMY_CLASSES = [NeutralEnemy, FireEnemy, WaterEnemy, PlantEnemy];
+const ENEMY_DELAY = 10000; // ms entre cada enemigo, 10 segundos
+const EAT_DAMAGE = 20; // vida que quita un enemigo por segundo
 
 export default class Level extends Phaser.Scene {
   constructor() { super("level"); }
 
   preload() {
-    this.load.svg("background", "assets/game/background.svg");
-    this.load.svg("yokai-joy", "assets/game/yokais/joy.svg");
-    this.load.svg("yokai-fire", "assets/game/yokais/fire.svg");
-    this.load.svg("yokai-plant", "assets/game/yokais/plant.svg");
-    this.load.svg("yokai-water", "assets/game/yokais/water.svg");
+    this.load.svg("background", "assets/background.svg");
 
+    // Yokais
+    this.load.svg("yokai-joy", "assets/sprites/yokais/joy_yokai.svg");
+    this.load.svg("yokai-fire", "assets/sprites/yokais/fire_yokai.svg");
+    this.load.svg("yokai-plant", "assets/sprites/yokais/plant_yokai.svg");
+    this.load.svg("yokai-water", "assets/sprites/yokais/water_yokai.svg");
 
     // Enemigos
-    this.load.svg("enemy-neutral", "assets/game/enemies/neutral_0.svg");
-    this.load.svg("enemy-fire", "assets/game/enemies/fire_0.svg");
-    this.load.svg("enemy-water", "assets/game/enemies/water_0.svg");
-    this.load.svg("enemy-plant", "assets/game/enemies/plant_0.svg");
+    this.load.svg("enemy-fire", "assets/sprites/enemies/fire_enemy.svg");
+    this.load.svg("enemy-water", "assets/sprites/enemies/water_enemy.svg");
+    this.load.svg("enemy-plant", "assets/sprites/enemies/plant_enemy.svg");
   }
 
   create() {
+    // fondo
     this.add.image(0, 0, "background").setOrigin(0);
 
-    this.enemies = this.add.group();
+    this.enemies = this.physics.add.group();
+    this.bullets = this.physics.add.group();
+    this.yokais = this.physics.add.staticGroup();
 
-    // matriz con lo que hay en cada casilla (null = vacía)
+    // cuando colisiona un enemigo con un yokai:
+    this.physics.add.collider(this.enemies, this.yokais, (enemy, yokai) => {
+      yokai.damage(EAT_DAMAGE / this.physics.world.fps);
+      enemy.body.setVelocityX(-enemy.speed); // sigue "empujando" hasta que muere la torre
+    });
+
+    // las balas no empujan al enemigo al impactar (TODO: cambiar y permitir empuje?)
+    this.physics.add.overlap(this.bullets, this.enemies, (bullet, enemy) => bullet.hit(enemy));
+
+    // matriz de casillas
     this.grid = [];
 
-     // carriles
-    for (let i = 0; i < ROWS; i++) {
-      this.grid[i] = [];
-      for (let j = 0; j < COLS; j++) {
-        this.grid[i][j] = null;
+    // dibujamos la grid
+    for (let row = 0; row < ROWS; row++) {
+      this.grid[row] = [];
 
-        this.add.rectangle(GRID_X + j * WIDTH, GRID_Y + i * HEIGHT, WIDTH - 4, HEIGHT).setOrigin(0)
-          .setStrokeStyle(1, 0xffffff)
-          .setInteractive()
-          .on("pointerdown", () => this.onCellClick(i, j));
+      for (let col = 0; col < COLS; col++) {
+        this.grid[row][col] = null;
+
+        // TODO: centralizar el estilo del tablero
+        this.add.rectangle(GRID_X + col * WIDTH, GRID_Y + row * HEIGHT, WIDTH - 4, HEIGHT)
+          .setOrigin(0)
+          .setStrokeStyle(1, 0xffffff);
       }
     }
 
-    new Enemy(this, 2, "neutral", 100, 30);
-    this.hud = new HUD(this, [JoyYokai, FireYokai, PlantYokai, WaterYokai]);  // yokais disponibles en este nivel
-  
+    // creamos el HUD con la alegría inicial de la escena
+    this.joy = 0;
+    this.hud = new HUD(this);
+
     // cada JOY_DELAY ms se genera alegría
     this.time.addEvent({
-    delay: JOY_DELAY,
-    loop: true,
-    callback: () => this.hud.addJoy(JOY_VALUE)
-  });
+      delay: configs.JOY_DELAY,
+      loop: true,
+      callback: () => this.addJoy(configs.JOY_VALUE)
+    });
 
     // cada ENEMY_DELAY ms aparece un enemigo
     this.time.addEvent({
       delay: ENEMY_DELAY,
       loop: true,
       callback: () => this.spawnRandomEnemy()
-    });   
+    });
   }
-   
-// centro (en píxeles) de la casilla (fila, columna)
-  cellCenter(row, col) {
+
+  // suma o resta alegría y actualiza el HUD
+  addJoy(amount) {
+    this.joy += amount;
+    this.hud.refresh(amount);
+  }
+
+  // centro en píxeles de una casilla
+  getGridPos(row, col) {
     return {
       x: GRID_X + col * WIDTH + (WIDTH - 4) / 2,
       y: GRID_Y + row * HEIGHT + HEIGHT / 2
     };
   }
 
-   // decide qué hacer al pulsar una casilla según el modo del HUD
-  onCellClick(row, col) {
-    if (this.hud.erasing) this.removeYokai(row, col);
-    else this.placeYokai(row, col);
+  // casilla bajo el cursor, sin contar el hueco entre columnas
+  getGridCell(x, y) {
+    const row = Math.floor((y - GRID_Y) / HEIGHT);
+    const col = Math.floor((x - GRID_X) / WIDTH);
+    if (row >= 0 && row < ROWS && col >= 0 && col < COLS && (x - GRID_X) % WIDTH < WIDTH - 4) return { row, col };
   }
 
-  // coloca el yokai seleccionado en la casilla (fila, columna)
-  placeYokai(row, col) {
-    const icon = this.hud.selected;      // yokai de muestra del selector
-    if (!icon) return;                   // no hay yokai seleccionado
-    if (this.grid[row][col]) return;     // casilla ocupada
-    if (!this.hud.spendJoy(icon.cost)) return;  //no hay alegría suficiente (si la hay, la gasta)
-
-    const { x, y } = this.cellCenter(row, col);
-
-    // crea uno nuevo del mismo tipo que el de muestra y empieza a actuar
-    this.grid[row][col] = new icon.constructor(this, x, y);
-    this.grid[row][col].start();
-    this.hud.cashbacks.add(this.grid[row][col].cashbackText);  // se muestra en modo borrado
-    this.hud.clearSelection();
+  // coloca el yokai seleccionado en la casilla si está libre (siempre y cuando haya suficiente alegría)
+  placeItem(row, col, YokaiType) {
+    const canPlace = !this.grid[row][col] && this.joy >= YokaiType.cost;
+    if (canPlace) {
+      this.addJoy(-YokaiType.cost);
+      const { x, y } = this.getGridPos(row, col);
+      const yokai = new YokaiType(this, x, y);
+      yokai.setSize(32, 60); // cuerpo más pequeño que la imagen, centrado en la casilla
+      this.yokais.add(yokai);
+      this.grid[row][col] = yokai;
+      yokai.once("destroy", () => { this.grid[row][col] = null; });
+      yokai.start();
+    }
+    return canPlace;
   }
 
-  // borra el yokai de la casilla (fila, columna)
-  removeYokai(row, col) {
+  // borra el yokai a mano y devuelve parte de su coste
+  removeCell(row, col) {
     const yokai = this.grid[row][col];
-    if (!yokai) return;                  // casilla vacía
-
-    this.hud.addJoy(Math.floor(yokai.cost / 2)); // devuelve la mitad de lo que costó
-
-    yokai.destroy();
-    this.grid[row][col] = null;
-    this.hud.clearSelection();
-  }
-
-  killYokai(row, col) {
-    const yokai = this.grid[row][col];
-    if (!yokai) return;                  // casilla vacía
-
-    yokai.destroy();
-    this.grid[row][col] = null;
-    this.hud.clearSelection();
+    if (yokai) {
+      this.addJoy(yokai.refund);
+      yokai.destroy();
+    }
+    return yokai !== null;
   }
 
   // crea un enemigo de tipo aleatorio en una fila aleatoria
   spawnRandomEnemy() {
-    const EnemyClass = Phaser.Utils.Array.GetRandom(ENEMY_CLASSES);
     const row = Phaser.Math.Between(0, ROWS - 1);
-    new EnemyClass(this, row);
+    const type = Phaser.Math.Between(0, 2);
+
+    if (type === 0) new FireEnemy(this, row);
+    else if (type === 1) new WaterEnemy(this, row);
+    else new PlantEnemy(this, row);
   }
 }
