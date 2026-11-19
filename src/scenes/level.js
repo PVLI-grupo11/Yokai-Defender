@@ -1,13 +1,12 @@
 import HUD from "../ui/HUD.js";
 import { configs } from "../game.js";
-import { FireEnemy, WaterEnemy, PlantEnemy } from "../objects/enemies.js";
+import WaveManager from "../logic/waveManager.js";
 
 // carriles (5x9) TODO: meter a una clase tablero?
 const ROWS = 5, COLS = 9;
 const WIDTH = 70, HEIGHT = 104;
 const GRID_X = 160, GRID_Y = 80;
 
-const ENEMY_DELAY = 10000; // ms entre cada enemigo, 10 segundos
 const EAT_DAMAGE = 20; // vida que quita un enemigo por segundo
 
 export default class Level extends Phaser.Scene {
@@ -73,12 +72,13 @@ export default class Level extends Phaser.Scene {
       callback: () => this.addJoy(configs.JOY_VALUE)
     });
 
-    // cada ENEMY_DELAY ms aparece un enemigo
-    this.time.addEvent({
-      delay: ENEMY_DELAY,
-      loop: true,
-      callback: () => this.spawnRandomEnemy()
-    });
+    // oleadas de enemigos (necesita el HUD ya creado)
+    this.waves = new WaveManager(this);
+  }
+
+  // Phaser llama a update en cada frame. time: ms desde que empezó el juego, delta: ms desde el frame anterior
+  update(time, delta) {
+    this.waves.update(delta);
   }
 
   // suma o resta alegría y actualiza el HUD
@@ -126,15 +126,5 @@ export default class Level extends Phaser.Scene {
       yokai.destroy();
     }
     return yokai !== null;
-  }
-
-  // crea un enemigo de tipo aleatorio en una fila aleatoria
-  spawnRandomEnemy() {
-    const row = Phaser.Math.Between(0, ROWS - 1);
-    const type = Phaser.Math.Between(0, 2);
-
-    if (type === 0) new FireEnemy(this, row);
-    else if (type === 1) new WaterEnemy(this, row);
-    else new PlantEnemy(this, row);
   }
 }

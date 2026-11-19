@@ -19,7 +19,7 @@ export default class HUD {
     this.joyGain = scene.add.text(0, 30, "", styles.yokai_slot).setOrigin(0, 0.5);
 
     // indicador oleada
-    scene.add.text(550, 30, "Oleada 1/5", styles.button).setOrigin(0.5);
+    this.waveText = scene.add.text(530, 30, "", styles.button).setOrigin(0.5);
 
     // botón para ir a resultado
     scene.add.text(750, 30, "Fin", styles.button).setOrigin(0.5)
@@ -82,6 +82,11 @@ export default class HUD {
         duration: 250
       });
     }
+  }
+
+  // texto de la oleada (la actual o la cuenta atrás de la siguiente)
+  setWaveText(text) {
+    this.waveText.setText(text);
   }
 
   // hace efecto de apagado si no hay suficiente alegria
