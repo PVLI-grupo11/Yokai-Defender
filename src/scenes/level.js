@@ -12,21 +12,7 @@ const EAT_DAMAGE = 20; // vida que quita un enemigo por segundo
 export default class Level extends Phaser.Scene {
   constructor() { super("level"); }
 
-  preload() {
-    this.load.svg("background", "assets/background.svg");
-
-    // Yokais
-    this.load.svg("yokai-joy", "assets/sprites/yokais/joy_yokai.svg");
-    this.load.svg("yokai-fire", "assets/sprites/yokais/fire_yokai.svg");
-    this.load.svg("yokai-plant", "assets/sprites/yokais/plant_yokai.svg");
-    this.load.svg("yokai-water", "assets/sprites/yokais/water_yokai.svg");
-
-    // Enemigos
-    this.load.svg("enemy-fire", "assets/sprites/enemies/fire_enemy.svg");
-    this.load.svg("enemy-water", "assets/sprites/enemies/water_enemy.svg");
-    this.load.svg("enemy-plant", "assets/sprites/enemies/plant_enemy.svg");
-  }
-
+  // las imágenes ya las ha cargado el menú principal (start.js)
   create() {
     // fondo
     this.add.image(0, 0, "background").setOrigin(0);

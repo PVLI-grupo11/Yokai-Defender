@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <!-- cielo de atardecer -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a1b5e"/>
+      <stop offset="1" stop-color="#c0505a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#sky)"/>
+
+  <!-- sol -->
+  <circle cx="400" cy="520" r="160" fill="#f4a95c"/>
+
+  <!-- suelo -->
+  <rect y="520" width="800" height="80" fill="#2d1838"/>
+</svg>

@@ -1,6 +1,8 @@
 import Start from "./scenes/start.js";
 import Level from "./scenes/level.js";
 import Result from "./scenes/result.js";
+import Credits from "./scenes/credits.js";
+import Encyclopedia from "./scenes/encyclopedia.js";
 
 // estilos para el juego (textos y movidas)
 export const styles = {
@@ -16,6 +18,9 @@ export const configs = {
   JOY_VALUE: 25, // cantidad de alegría que se genera
 };
 
+// esperamos a que el navegador descargue la fuente; si no, Phaser dibujaría los textos con la fuente por defecto
+await document.fonts.load('bold 26px "Shippori Mincho"');
+
 new Phaser.Game({
   type: Phaser.WEBGL,
   width: 800,
@@ -24,5 +29,5 @@ new Phaser.Game({
   physics: {
     default: "arcade"
   },
-  scene: [ Start, Level, Result ]
+  scene: [ Start, Level, Result, Credits, Encyclopedia ]
 });
