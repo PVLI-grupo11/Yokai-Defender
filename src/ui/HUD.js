@@ -14,7 +14,7 @@ export default class HUD {
       .on("pointerdown", () => scene.scene.start("start"));
 
     // alegría
-    scene.add.circle(140, 30, 10, 0xffd23f).setStrokeStyle(1, 0xffffff);
+    this.joyIcon = scene.add.circle(140, 30, 10, 0xffd23f).setStrokeStyle(1, 0xffffff); // icono de alegría
     this.joy = scene.add.text(158, 30, "Alegría: " + scene.joy, styles.button).setOrigin(0, 0.5);
     this.joyGain = scene.add.text(0, 30, "", styles.yokai_slot).setOrigin(0, 0.5);
 
@@ -82,6 +82,48 @@ export default class HUD {
         duration: 250
       });
     }
+  }
+
+  //lanza una bola de alegría desde (x, y) hasta el icono del HUD, al llegar se suma
+  sendJoy(x, y, amount) {
+    //copia del icono del HUD, empieza invisible (escala 0)
+    const orb = this.scene.add.circle(x, y, 10, 0xffd23f)
+      .setStrokeStyle(1, 0xffffff)
+      .setDepth(20)
+      .setScale(0);
+
+    //aparece y sube un poco desde el yokai
+    this.scene.tweens.add({
+      targets: orb,
+      y: y - 25,
+      scale: 1.3,
+      duration: 200,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        //vuela hasta el icono del HUD, acelerando
+        this.scene.tweens.add({
+          targets: orb,
+          x: this.joyIcon.x,
+          y: this.joyIcon.y,
+          scale: 1,
+          duration: 450,
+          ease: "Cubic.easeIn",
+          onComplete: () => {
+            //al llegar: desaparece, se suma y el icono salta
+            orb.destroy();
+            this.scene.addJoy(amount);
+            this.pulseJoyIcon();
+          }
+        });
+      }
+    });
+  }
+
+  // el icono de alegría da un pequeño salto
+  pulseJoyIcon() {
+    this.scene.tweens.killTweensOf(this.joyIcon);
+    this.joyIcon.setScale(1);
+    this.scene.tweens.add({ targets: this.joyIcon, scale: 1.4, duration: 100, yoyo: true });
   }
 
   // texto de la oleada (la actual o la cuenta atrás de la siguiente)

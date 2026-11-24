@@ -10,6 +10,7 @@ export const styles = {
   button: { fontSize: "24px" }, // botón genérico del juego
   cashback_text: { fontSize: "16px", align: "center", color: "#ffd23f" }, // texto que muestra el cashback
   yokai_slot: { fontSize: "16px", align: "center" }, // precio en el selector de yokais
+   damage_text: { fontSize: "18px", color: "#ee0505", stroke: "#000000", strokeThickness: 3 }, //número de daño que recibe un enemigo
 };
 
 // configs generales del juego (A lo mejor conviene tener esto en cada clase correspondiente pero por comodidad...)

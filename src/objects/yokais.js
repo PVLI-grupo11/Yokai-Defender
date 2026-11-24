@@ -26,7 +26,7 @@ export default class Yokai extends Phaser.GameObjects.Container {
 
   // al colocarlo empieza a actuar cada delay ms
   start() {
-    const timer = this.scene.time.addEvent({ delay: this.delay, loop: true, callback: () => this.shoot() });
+    const timer = this.scene.time.addEvent({ delay: this.delay, loop: true, callback: () => { if (this.canShoot()) this.shoot(); } });  // CAMBIADO: solo dispara si puede
     this.once("destroy", () => timer.remove()); // el temporizador es de la escena
   }
 
@@ -34,6 +34,11 @@ export default class Yokai extends Phaser.GameObjects.Container {
   damage(damage) {
     this.health -= damage;
     if (this.health <= 0) this.destroy();
+  }
+
+//algún enemigo visible en su fila, por delante?
+  canShoot() {
+    return this.scene.hasEnemyAhead(this.row, this.x);
   }
 
   // disparo cada delay ms
@@ -46,7 +51,9 @@ export class JoyYokai extends Yokai {
 
   constructor(scene, x, y) { super(scene, x, y, "yokai-joy", 100, configs.JOY_DELAY); }
 
-  shoot() { this.scene.addJoy(configs.JOY_VALUE); } // "dispara" alegría
+  canShoot() { return true; }  //la alegria se genera haya o no enemigos
+
+  shoot() { this.scene.hud.sendJoy(this.x, this.y - 20, configs.JOY_VALUE); }  //la alegria vuela al HUD y se suma al llegar
 }
 
 // dispara fuego

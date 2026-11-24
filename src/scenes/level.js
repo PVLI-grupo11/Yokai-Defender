@@ -48,7 +48,7 @@ export default class Level extends Phaser.Scene {
     }
 
     // creamos el HUD con la alegría inicial de la escena
-    this.joy = 0;
+    this.joy = 100; //cambiar al final, por ahora es para testear
     this.hud = new HUD(this);
 
     // cada JOY_DELAY ms se genera alegría
@@ -81,6 +81,12 @@ export default class Level extends Phaser.Scene {
     };
   }
 
+   //hay enemigo visible?
+  hasEnemyAhead(row, x) {
+    return this.enemies.getChildren().some(enemy =>
+      enemy.active && enemy.row === row && enemy.x > x && enemy.isOnScreen()
+    );
+  }
   // casilla bajo el cursor, sin contar el hueco entre columnas
   getGridCell(x, y) {
     const row = Math.floor((y - GRID_Y) / HEIGHT);
@@ -95,6 +101,7 @@ export default class Level extends Phaser.Scene {
       this.addJoy(-YokaiType.cost);
       const { x, y } = this.getGridPos(row, col);
       const yokai = new YokaiType(this, x, y);
+      yokai.row = row;         //fila en la que está (para buscar enemigos en su carril)
       yokai.setSize(32, 60); // cuerpo más pequeño que la imagen, centrado en la casilla
       this.yokais.add(yokai);
       this.grid[row][col] = yokai;
