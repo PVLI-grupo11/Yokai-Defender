@@ -8,6 +8,13 @@ const BAR_HEIGHT = 5;
 
 const FLASH_TIME = 80; //ms que el enemigo se queda en blanco al recibir daño
 
+//lo que multiplica cada cosa
+const DAMAGEPELEMENT = {
+  fire:  { fire: 1,   plant: 1.5, water: 0.5 }, 
+  water: { fire: 1.5, plant: 0.5, water: 1 },   
+  plant: { fire: 0.5, plant: 1,   water: 1.5 },  
+};
+
 export default class Enemy extends Phaser.GameObjects.Sprite {
 
   constructor(scene, row, type, health, speed) {
@@ -18,6 +25,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.health = health;
     this.maxHealth = health;  //para calcular cuanto ocupa la barra
     this.speed = speed;
+    this.element = type;      //fire, water o plant (para saber cuanto daño le hace cada bala)
     this.flashTimer = null;   //temporizador del parpadeo
 
     scene.add.existing(this);
@@ -39,10 +47,11 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.positionHealthBar();
   }
 
-  // recibe daño, si se queda sin vida, muere
-  damage(damage) {
+//recibe daño  
+  damage(damage, element) {
     if (!this.active) return; //ya estaba muerto
 
+    damage *= DAMAGEPELEMENT[element][this.element];
     this.health -= damage;
     this.onDamaged(damage);   //feedback visual
 
@@ -64,7 +73,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   }
 
 
-   // -----------barra de vida-----------------------------------------------------------------------------------------------
+   // barra vida
 
   // crea la barra (oculta hasta el primer golpe)
   createHealthBar() {

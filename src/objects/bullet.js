@@ -3,10 +3,11 @@ const BULLET_SPEED = 300;
 // clase de la bala
 export default class Bullet extends Phaser.GameObjects.Rectangle {
 
-  constructor(scene, x, y, color, damage, atraviesa = false) {
+  constructor(scene, x, y, color, damage, element, atraviesa = false) {
     super(scene, x, y, 12, 12, color);
 
     this.damage = damage;
+    this.element = element;      // fire, water o plant: el del yokai que la dispara
     this.atraviesa = atraviesa;  // para las balas de fuego que atraviesan a los enemigos
     if (atraviesa) this.hitEnemies = []; // el overlap puede repetirse mientras sigue tocando al enemigo
 
@@ -17,7 +18,7 @@ export default class Bullet extends Phaser.GameObjects.Rectangle {
 
   hit(enemy) {
     if (this.active && (!this.atraviesa || !this.hitEnemies.includes(enemy))) {
-      enemy.damage(this.damage);
+      enemy.damage(this.damage, this.element);
       if (this.atraviesa) this.hitEnemies.push(enemy);
       else this.destroy();
     }

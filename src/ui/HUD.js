@@ -7,6 +7,7 @@ export default class HUD {
     this.scene = scene;
     this.selected = null; // slot seleccionado
     this.erase_mode = false; // si esta activo el modo borrado
+    this.upgradeMenu = null; // menú de mejoras abierto (o null)
 
     // barra superior
     scene.add.text(60, 30, "Volver", styles.button).setOrigin(0.5)
@@ -160,13 +161,67 @@ export default class HUD {
   }
 
   // el HUD decide qué acción intentar; la escena cambia el tablero
-  onBoardClick(pointer) {
+  onBoardClick(pointer, over) {
+    if (over.length > 0) return; // se ha pulsado un botón, ya lo gestiona él
+    this.closeUpgradeMenu();
+
     const cell = this.scene.getGridCell(pointer.x, pointer.y);
     if (cell) {
+      const yokai = this.scene.grid[cell.row][cell.col];
       if (this.erase_mode) {
         if (this.scene.removeCell(cell.row, cell.col)) this.clearSelection();
-      } else if (this.selected && this.scene.placeItem(cell.row, cell.col, this.selected.YokaiType)) this.clearSelection();
+      } else if (this.selected) {
+        if (this.scene.placeItem(cell.row, cell.col, this.selected.YokaiType)) this.clearSelection();
+      } else if (yokai) this.openUpgradeMenu(yokai);
     }
+  }
+
+  // abre al lado del yokai los botones con las mejoras que le quedan
+  openUpgradeMenu(yokai) {
+    if (yokai instanceof JoyYokai) return; // la alegría no se mejora
+
+    const branches = [];
+    if (yokai.canUpgrade("speed")) branches.push("speed");
+    if (yokai.canUpgrade("damage")) branches.push("damage");
+    if (branches.length === 0) return; // ya está al máximo
+
+    // a la derecha del yokai, o a la izquierda si no cabe
+    let x = yokai.x + 40;
+    if (x + 130 > this.scene.scale.width) x = yokai.x - 170;
+    this.upgradeMenu = this.scene.add.container(x, yokai.y - 30).setDepth(30);
+
+    for (let i = 0; i < branches.length; i++) {
+      const branch = branches[i];
+      let label = "Daño x1.25";
+      if (branch === "speed") label = "Velocidad x1.25";
+
+      const button = this.scene.add.rectangle(0, i * 34, 130, 30, 0x140a1c, 0.9).setOrigin(0)
+        .setStrokeStyle(2, 0xe8c170)
+        .setInteractive();
+      const text = this.scene.add.text(65, i * 34 + 15, label + "\n" + yokai.upgradeCost(), styles.upgrade_text)
+        .setOrigin(0.5);
+
+      button.on("pointerdown", () => this.buyUpgrade(yokai, branch));
+      this.upgradeMenu.add([button, text]);
+    }
+  }
+
+  // paga la mejora si hay alegría suficiente
+  buyUpgrade(yokai, branch) {
+    const cost = yokai.upgradeCost();
+    if (!yokai.active) this.closeUpgradeMenu(); // se lo han comido con el menú abierto
+    else if (this.scene.joy < cost) this.flashNoJoy();
+    else {
+      this.scene.addJoy(-cost);
+      yokai.upgrade(branch);
+      this.closeUpgradeMenu();
+    }
+  }
+
+  // cierra el menú de mejoras si está abierto
+  closeUpgradeMenu() {
+    if (this.upgradeMenu) this.upgradeMenu.destroy();
+    this.upgradeMenu = null;
   }
 
   // activa/desactiva el modo borrado
@@ -178,6 +233,7 @@ export default class HUD {
 
   // quita la selección actual
   clearSelection() {
+    this.closeUpgradeMenu();
     if (this.selected) this.selected.slot.setStrokeStyle(1, 0xffffff);
     this.selected = null;
     this.setEraseMode(false);

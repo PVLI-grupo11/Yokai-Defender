@@ -10,6 +10,8 @@ export const styles = {
   button: { fontSize: "24px" }, // botón genérico del juego
   cashback_text: { fontSize: "16px", align: "center", color: "#ffd23f" }, // texto que muestra el cashback
   yokai_slot: { fontSize: "16px", align: "center" }, // precio en el selector de yokais
+  level_text: { fontSize: "16px", align: "center" }, // nivel de mejora debajo del yokai
+  upgrade_text: { fontSize: "12px", align: "center" }, // botones del menú de mejoras
    damage_text: { fontSize: "18px", color: "#ee0505", stroke: "#000000", strokeThickness: 3 }, //número de daño que recibe un enemigo
 };
 
