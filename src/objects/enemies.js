@@ -47,7 +47,13 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.positionHealthBar();
   }
 
-//recibe daño  
+  //multiplica la vida 
+  multiplyHealth(factor) {
+    this.health *= factor;
+    this.maxHealth *= factor;  //la barra de vida sigue empezando llena
+  }
+
+//recibe daño
   damage(damage, element) {
     if (!this.active) return; //ya estaba muerto
 

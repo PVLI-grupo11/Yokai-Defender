@@ -12,6 +12,9 @@ export default class Start extends MenuScene {
     this.load.svg("background", "assets/background.svg");
     this.load.svg("menu-background", "assets/menu_background.svg");
 
+    // oleadas de enemigos (las lee WaveManager)
+    this.load.json("waves", "assets/waves.json");
+
     // Yokais
     this.load.svg("yokai-joy", "assets/sprites/yokais/joy_yokai.svg");
     this.load.svg("yokai-fire", "assets/sprites/yokais/fire_yokai.svg");

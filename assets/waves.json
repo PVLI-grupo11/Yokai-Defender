@@ -1,0 +1,60 @@
+{
+  "_ayuda": "Tiempos en segundos. time: cuándo sale desde que empieza la oleada (en orden). type: fire, water o plant. row: carril de 0 (arriba) a 4 (abajo). healthIncrease: cuánto se multiplica la vida de los enemigos en cada oleada (1 = no cambia).",
+  "prepTime": 10,
+  "restTime": 5,
+  "healthIncrease": 1.2,
+  "waves": [
+    [
+      { "time": 0, "type": "plant", "row": 2 },
+      { "time": 6, "type": "plant", "row": 1 },
+      { "time": 12, "type": "plant", "row": 3 },
+      { "time": 18, "type": "plant", "row": 2 }
+    ],
+    [
+      { "time": 0, "type": "plant", "row": 0 },
+      { "time": 4, "type": "fire", "row": 2 },
+      { "time": 8, "type": "plant", "row": 4 },
+      { "time": 12, "type": "fire", "row": 1 },
+      { "time": 16, "type": "plant", "row": 3 },
+      { "time": 20, "type": "fire", "row": 2 }
+    ],
+    [
+      { "time": 0, "type": "water", "row": 2 },
+      { "time": 3, "type": "plant", "row": 0 },
+      { "time": 6, "type": "fire", "row": 4 },
+      { "time": 10, "type": "water", "row": 1 },
+      { "time": 13, "type": "fire", "row": 3 },
+      { "time": 16, "type": "plant", "row": 2 },
+      { "time": 20, "type": "fire", "row": 0 },
+      { "time": 22, "type": "water", "row": 4 }
+    ],
+    [
+      { "time": 0, "type": "fire", "row": 1 },
+      { "time": 2, "type": "fire", "row": 3 },
+      { "time": 5, "type": "water", "row": 2 },
+      { "time": 8, "type": "plant", "row": 0 },
+      { "time": 10, "type": "plant", "row": 4 },
+      { "time": 13, "type": "water", "row": 1 },
+      { "time": 15, "type": "fire", "row": 2 },
+      { "time": 17, "type": "fire", "row": 4 },
+      { "time": 20, "type": "water", "row": 3 },
+      { "time": 22, "type": "fire", "row": 0 }
+    ],
+    [
+      { "time": 0, "type": "water", "row": 0 },
+      { "time": 2, "type": "water", "row": 4 },
+      { "time": 5, "type": "fire", "row": 2 },
+      { "time": 7, "type": "plant", "row": 1 },
+      { "time": 9, "type": "plant", "row": 3 },
+      { "time": 12, "type": "water", "row": 2 },
+      { "time": 14, "type": "fire", "row": 0 },
+      { "time": 16, "type": "fire", "row": 4 },
+      { "time": 20, "type": "fire", "row": 1 },
+      { "time": 20, "type": "fire", "row": 3 },
+      { "time": 21, "type": "water", "row": 2 },
+      { "time": 24, "type": "plant", "row": 0 },
+      { "time": 24, "type": "plant", "row": 4 },
+      { "time": 25, "type": "fire", "row": 2 }
+    ]
+  ]
+}
